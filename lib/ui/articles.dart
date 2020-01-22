@@ -25,21 +25,29 @@ class _ArticlesState extends State<Articles> {
 
   articlesList() {
     return Container(
-      child: FutureBuilder(
-          future: getArticles(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              articles = snapshot.data['articles'];
-              return ListView.builder(
-                itemCount: 20,
-                itemBuilder: (context, int) {
-                  return _articleEntry(articles[int]);
-                },
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 1));
+          setState(() {
+            
+          });
+        },
+        child: FutureBuilder(
+            future: getArticles(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                articles = snapshot.data['articles'];
+                return ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, int) {
+                    return _articleEntry(articles[int]);
+                  },
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
     );
   }
 
